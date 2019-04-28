@@ -1,0 +1,23 @@
+{
+  "name": "smrpg-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "SMRPG_Rando_bot.js",
+  "scripts": {
+    "start": "node SMRPG_Rando_bot.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maverickmarq/smrpg-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maverickmarq/smrpg-bot/issues"
+  },
+  "homepage": "https://github.com/maverickmarq/smrpg-bot#readme",
+  "dependencies": {
+    "tmi.js": "^1.0.0"
+  }
+}
