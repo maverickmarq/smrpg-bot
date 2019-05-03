@@ -38,6 +38,8 @@ function onMessageHandler (target, context, msg, self){
 	if(self) { return } // Ignore messages from the bot
 	if(msg[0] != "!") { return } // Be a nice dude and don't parse messages not for the bot.
 
+  msgs = msgs.toLowerCase();
+
 	var words = msg.split(/[ ,]+/);
 
   if(msg === "!bossgame"){
@@ -69,7 +71,7 @@ function onMessageHandler (target, context, msg, self){
         bossesRemoved.push(words[2]);
 
         sendMessage(target, context, `Fixup. Replaced [${words[1]}] with [${words[2]}]`);
-        //TODO: This will need more work when leaderboard happens. 
+        //TODO: This will need more work when leaderboard happens.
       }
       else{
         sendMessage(target, context, `usage: !fixup [wrongboss] [correctboss]`);
