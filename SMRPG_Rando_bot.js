@@ -32,6 +32,7 @@ var bosses = [	"hammerbros", "croco1", "croco2",
 var bossesRemoved = [];
 var guesses = [];
 var gameStarted = false;
+var processingGuess = false;
 
 function onMessageHandler (target, context, msg, self){
 	if(self) { return } // Ignore messages from the bot
@@ -57,6 +58,7 @@ function onMessageHandler (target, context, msg, self){
 
         // Start next round.
         guesses = [];
+        processingGuess = false;
 				sendMessage(target, context, "Next round started, use !guess and a boss name from the !bosses list to see the bosses that haven't been revealed.");
 			}
 		}
@@ -65,6 +67,7 @@ function onMessageHandler (target, context, msg, self){
 		if(msg === "!startbossgame"){
 			bossesRemoved = [];
 			guesses = [];
+      processingGuess = false;
 			gameStarted = true;
 
 			sendMessage(target, context, "Guessing game started, use !guess and a boss name from the !bosses list to make your first guess.");
@@ -72,6 +75,7 @@ function onMessageHandler (target, context, msg, self){
 
     if(msg === "!stopbossgame"){
       gameStarted = false;
+      processingGuess = false;
       sendMessage(target, context, "Guessing game ended, stop spamming commands.");
     }
 	}
@@ -92,6 +96,11 @@ function onMessageHandler (target, context, msg, self){
 
 		// Allow people to guess. One guess per person. First come, first served.
 		else if(words[0] == "!guess"){
+
+      while(processingGuess) { }; // Look for problems here if nothing works :)
+
+      processingGuess = true;
+
 			var hasGuessed = false;
 
 			for(guess of guesses){
@@ -107,6 +116,8 @@ function onMessageHandler (target, context, msg, self){
 					sendMessage(target, context, `${context.username} has guessed [${words[1]}]`);
 				}
 			}
+
+      processingGuess = false;
 		}
 	}
 }
