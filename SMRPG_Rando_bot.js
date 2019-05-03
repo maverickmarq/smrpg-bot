@@ -43,7 +43,7 @@ function onMessageHandler (target, context, msg, self){
 	var words = msg.split(/[ ,]+/);
 
   if(msg === "!bossgame"){
-		sendMessage(target, context, "SMRPG Boss game helps keep track of what bosses have been fought and who guessed them correctly! [Mod commands, !startbossgame !stopbossgame !reveal] [user commands, !guess, !bosses, !bossgame]");
+		sendMessage(target, context, "SMRPG Boss game helps keep track of what bosses have been fought and who guessed them correctly! [Mod commands, !startbossgame !stopbossgame !reveal !fixboss] [user commands, !guess, !bosses, !bossgame]");
 	}
 
 	if(modOnlyCommand(context)){
@@ -74,7 +74,7 @@ function onMessageHandler (target, context, msg, self){
         //TODO: This will need more work when leaderboard happens.
       }
       else{
-        sendMessage(target, context, `usage: !fixup [wrongboss] [correctboss]`);
+        sendMessage(target, context, `usage: !fixboss [wrongboss] [correctboss]`);
       }
     }
 
