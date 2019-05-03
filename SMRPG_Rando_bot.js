@@ -32,15 +32,18 @@ var bosses = [	"hammerbros", "croco1", "croco2",
 var bossesRemoved = [];
 var guesses = [];
 var gameStarted = false;
+var processingGuess = false;
 
 function onMessageHandler (target, context, msg, self){
 	if(self) { return } // Ignore messages from the bot
 	if(msg[0] != "!") { return } // Be a nice dude and don't parse messages not for the bot.
 
+  msg = msg.toLowerCase();
+
 	var words = msg.split(/[ ,]+/);
 
   if(msg === "!bossgame"){
-		sendMessage(target, context, "SMRPG Boss game helps keep track of what bosses have been fought and who guessed them correctly! [Mod commands, !startbossgame !stopbossgame !reveal] [user commands, !guess, !bosses, !bossgame]");
+		sendMessage(target, context, "SMRPG Boss game helps keep track of what bosses have been fought and who guessed them correctly! [Mod commands, !startbossgame !stopbossgame !reveal !fixboss] [user commands, !guess, !bosses, !bossgame]");
 	}
 
 	if(modOnlyCommand(context)){
@@ -57,14 +60,29 @@ function onMessageHandler (target, context, msg, self){
 
         // Start next round.
         guesses = [];
+        processingGuess = false;
 				sendMessage(target, context, "Next round started, use !guess and a boss name from the !bosses list to see the bosses that haven't been revealed.");
 			}
 		}
+
+    if(words[0] === "!fixboss" && gameStarted){
+      if(bossesRemoved.contains(words[1]) && bosses.contains(words[2]) && !bossesRemoved.contains(words[2])){
+        bossesRemoved.pop(words[1]);
+        bossesRemoved.push(words[2]);
+
+        sendMessage(target, context, `Fixup. Replaced [${words[1]}] with [${words[2]}]`);
+        //TODO: This will need more work when leaderboard happens.
+      }
+      else{
+        sendMessage(target, context, `usage: !fixboss [wrongboss] [correctboss]`);
+      }
+    }
 
 		// Gets everything ligned up for a new game.
 		if(msg === "!startbossgame"){
 			bossesRemoved = [];
 			guesses = [];
+      processingGuess = false;
 			gameStarted = true;
 
 			sendMessage(target, context, "Guessing game started, use !guess and a boss name from the !bosses list to make your first guess.");
@@ -72,6 +90,7 @@ function onMessageHandler (target, context, msg, self){
 
     if(msg === "!stopbossgame"){
       gameStarted = false;
+      processingGuess = false;
       sendMessage(target, context, "Guessing game ended, stop spamming commands.");
     }
 	}
@@ -92,6 +111,11 @@ function onMessageHandler (target, context, msg, self){
 
 		// Allow people to guess. One guess per person. First come, first served.
 		else if(words[0] == "!guess"){
+
+      while(processingGuess) { }; // Look for problems here if nothing works :)
+
+      processingGuess = true;
+
 			var hasGuessed = false;
 
 			for(guess of guesses){
@@ -107,6 +131,8 @@ function onMessageHandler (target, context, msg, self){
 					sendMessage(target, context, `${context.username} has guessed [${words[1]}]`);
 				}
 			}
+
+      processingGuess = false;
 		}
 	}
 }
