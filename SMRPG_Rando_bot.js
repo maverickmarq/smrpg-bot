@@ -63,6 +63,19 @@ function onMessageHandler (target, context, msg, self){
 			}
 		}
 
+    if(words[0] === "!fixboss" && gameStarted){
+      if(bossesRemoved.contains(words[1]) && bosses.contains(words[2]) && !bossesRemoved.contains(words[2])){
+        bossesRemoved.pop(words[1]);
+        bossesRemoved.push(words[2]);
+
+        sendMessage(target, context, `Fixup. Replaced [${words[1]}] with [${words[2]}]`);
+        //TODO: This will need more work when leaderboard happens. 
+      }
+      else{
+        sendMessage(target, context, `usage: !fixup [wrongboss] [correctboss]`);
+      }
+    }
+
 		// Gets everything ligned up for a new game.
 		if(msg === "!startbossgame"){
 			bossesRemoved = [];
