@@ -38,7 +38,7 @@ function onMessageHandler (target, context, msg, self){
 	if(self) { return } // Ignore messages from the bot
 	if(msg[0] != "!") { return } // Be a nice dude and don't parse messages not for the bot.
 
-  msgs = msgs.toLowerCase();
+  msg = msg.toLowerCase();
 
 	var words = msg.split(/[ ,]+/);
 
