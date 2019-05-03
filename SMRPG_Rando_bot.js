@@ -30,7 +30,7 @@ var bosses = [	"hammerbros", "croco1", "croco2",
 				"pandorite", "hidon", "chester"];
 
 var bossesRemoved = [];
-var guesses = [];
+var guesses = new Map();
 var gameStarted = false;
 var processingGuess = false;
 
@@ -52,14 +52,15 @@ function onMessageHandler (target, context, msg, self){
 			if(bosses.contains(words[1])){
 				bossesRemoved.push(words[1]);
 
-				var match = guesses.filter(x => x.key == words[1])[0];
+        var match = guesses.get(words[1]);
+
 				if(match != null)
-					sendMessage(target, context, `@${match.value} guessed correctly! Good job you lucky bastard.`);
+					sendMessage(target, context, `@${match} guessed correctly! Good job you lucky bastard.`);
 				else
 					sendMessage(target, context, "Wow, no one guessed it, are you kidding me?");
 
         // Start next round.
-        guesses = [];
+        guesses = new Map();
         processingGuess = false;
 				sendMessage(target, context, "Next round started, use !guess and a boss name from the !bosses list to see the bosses that haven't been revealed.");
 			}
@@ -81,7 +82,7 @@ function onMessageHandler (target, context, msg, self){
 		// Gets everything ligned up for a new game.
 		if(msg === "!startbossgame"){
 			bossesRemoved = [];
-			guesses = [];
+			guesses = new Map();
       processingGuess = false;
 			gameStarted = true;
 
@@ -111,11 +112,6 @@ function onMessageHandler (target, context, msg, self){
 
 		// Allow people to guess. One guess per person. First come, first served.
 		else if(words[0] == "!guess"){
-
-      while(processingGuess) { }; // Look for problems here if nothing works :)
-
-      processingGuess = true;
-
 			var hasGuessed = false;
 
 			for(guess of guesses){
@@ -126,13 +122,11 @@ function onMessageHandler (target, context, msg, self){
 			}
 
 			if(!hasGuessed){
-				if(bosses.contains(words[1]) && !bossesRemoved.contains(words[1]) && guesses[words[1]] == null){
-					guesses.push( { "key" : `${words[1]}` , "value" :  context.username });
-					sendMessage(target, context, `${context.username} has guessed [${words[1]}]`);
+				if(bosses.contains(words[1]) && !bossesRemoved.contains(words[1]) && !guesses.has(words[1])){
+            guesses.set(words[1], context.username);
+  					sendMessage(target, context, `${context.username} has guessed [${words[1]}]`);
+          }
 				}
-			}
-
-      processingGuess = false;
 		}
 	}
 }
