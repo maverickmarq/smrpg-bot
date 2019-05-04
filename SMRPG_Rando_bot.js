@@ -1,4 +1,5 @@
-const twitch = require('tmi.js')
+const twitch = require('tmi.js');
+const fs = require('fs');
 
 let opts = {
   identity: {
@@ -19,15 +20,10 @@ client.on('disconnected', onDisconnectedHandler);
 // Connect to Twitch:
 client.connect();
 
-var bosses = [	"hammerbros", "croco1", "croco2",
-				"mack", "belome1", "belome2", "bowyer",
-				"punchinello", "booster", "knifegrateguy",
-				"cake", "calamari", "johnny", "yaridovich",
-				"jagger", "megasmilax", "birdo", "valentina",
-				"czardragon", "axemrangers", "magikoopa", "boomer",
-				"exor", "countdown", "cloakerdomino", "clerk", "manager",
-				"director", "gunyolk", "jinx1", "jinx2", "jinx3", "boxboy",
-				"pandorite", "hidon", "chester"];
+var bosses = []
+fs.readFile(process.env.bosses, 'utf-8', function(err, data){
+	bosses = JSON.parse(data);
+});
 
 var bossesRemoved = [];
 var guesses = new Map();
@@ -49,7 +45,7 @@ function onMessageHandler (target, context, msg, self){
 	if(modOnlyCommand(context)){
 		// Boss has been discovered. Announce a winner.
 		if(words[0] === "!reveal" && gameStarted){
-			if(bosses.contains(words[1])){
+			if(bosses.bosses.contains(words[1])){
 				bossesRemoved.push(words[1]);
 
         var match = guesses.get(words[1]);
@@ -67,7 +63,7 @@ function onMessageHandler (target, context, msg, self){
 		}
 
     if(words[0] === "!fixboss" && gameStarted){
-      if(bossesRemoved.contains(words[1]) && bosses.contains(words[2]) && !bossesRemoved.contains(words[2])){
+      if(bossesRemoved.contains(words[1]) && bosses.bosses.contains(words[2]) && !bossesRemoved.contains(words[2])){
         bossesRemoved.pop(words[1]);
         bossesRemoved.push(words[2]);
 
@@ -101,7 +97,7 @@ function onMessageHandler (target, context, msg, self){
 		if(msg === "!bosses"){
 			var string = "The following bosses have not been revealed: ";
 
-			for(boss of bosses){
+			for(boss of bosses.bosses){
 				if(!bossesRemoved.contains(boss)){
 					string += `${boss}` + ", ";
 				}
@@ -122,7 +118,7 @@ function onMessageHandler (target, context, msg, self){
 			}
 
 			if(!hasGuessed){
-				if(bosses.contains(words[1]) && !bossesRemoved.contains(words[1]) && !guesses.has(words[1])){
+				if(bosses.bosses.contains(words[1]) && !bossesRemoved.contains(words[1]) && !guesses.has(words[1])){
             guesses.set(words[1], context.username);
   					sendMessage(target, context, `${context.username} has guessed [${words[1]}]`);
           }
