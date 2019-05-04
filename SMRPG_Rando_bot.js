@@ -1,12 +1,6 @@
 const twitch = require('tmi.js');
 const fs = require('fs');
 
-process.env.twitchUsername = 'smrpg_bot';
-process.env.oauth = 'oauth:xn5iapde7fxx9eirrravk39pnpou8l';
-process.env.channel = '#maverickmarq';
-
-process.env.bosses = 'bosses.json';
-
 let opts = {
   identity: {
 	username: process.env.twitchUsername,
