@@ -45,7 +45,7 @@ function onMessageHandler (target, context, msg, self){
 	if(modOnlyCommand(context)){
 		// Boss has been discovered. Announce a winner.
 		if(words[0] === "!reveal" && gameStarted){
-			if(bosses.bosses.contains(words[1])){
+			if(bosses.bosses.contains(words[1]) && !bossesRemoved.contains(words[1])){
 				bossesRemoved.push(words[1]);
 
         var match = guesses.get(words[1]);
