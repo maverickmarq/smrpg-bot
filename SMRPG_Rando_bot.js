@@ -108,19 +108,18 @@ function onMessageHandler (target, context, msg, self){
 
 		// Allow people to guess. One guess per person. First come, first served.
     else if(words[0] == "!guess"){
-        if(bosses.bosses.contains(words[1])
-        && !bossesRemoved.contains(words[1])
-        && !guesses.has(words[1])){
-
-            for(guess of guesses){
-                if(guess.value == context.username){
-                    guesses.delete(guess.key);
-                    break;
-                }
-            }
-            guesses.set(words[1], context.username);
-            sendMessage(target, context, `${context.username} has guessed [${words[1]}]`);
-        }
+      if(bosses.bosses.contains(words[1])
+      && !bossesRemoved.contains(words[1])
+      && !guesses.has(words[1])){
+          for(guess of guesses){
+              if(guess[1] == context.username){
+                  guesses.delete(guess[0]);
+                  break;
+              }
+          }
+          guesses.set(words[1], context.username);
+          sendMessage(target, context, `${context.username} has guessed [${words[1]}]`);
+      }
     }
 	}
 }
